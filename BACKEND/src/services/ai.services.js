@@ -54,8 +54,8 @@ Self Description:${selfDescription},`;
 
 
 const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: [{ type: 'text', text: prompt }],
+    model: "gemini-2.5-flash",
+    contents: prompt,
     config: {
       responseMimeType: "application/json",
       responseSchema: zodToJsonSchema(interviewReportSchema),
