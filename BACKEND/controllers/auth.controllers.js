@@ -78,8 +78,10 @@ async function LoginUser(req,res){
         {expiresIn:"1d"}
     );
 
-    res.cookie("token",token);
-    res.status(200).json({message:"User logged in successfully"});
+    // Set cookie for browser-based clients
+    res.cookie("token", token, { httpOnly: true });
+    // Also return token in response body so programmatic clients can use Authorization header
+    res.status(200).json({message:"User logged in successfully", token});
 }
 
 

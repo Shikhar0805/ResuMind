@@ -1,7 +1,9 @@
 const jwt=require('jsonwebtoken');
 const tokenBlacklist=require('../models/token.blacklist');
 async function authUser(req,res,next){
-    const token=req.cookies.token;
+    // Accept token from cookie OR Authorization header (Bearer)
+    const headerToken = req.headers && req.headers.authorization && req.headers.authorization.split(' ')[1];
+    const token = req.cookies?.token || headerToken;
     if(!token){
         return res.status(401).json({message:"Access denied. No token provided."});
     }

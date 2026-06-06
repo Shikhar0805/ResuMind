@@ -217,3 +217,176 @@ button, a[role="button"], input[type="button"], input[type="submit"] {
   touch-action: manipulation;
 }
 
+/* ----- Mobile-first component rules ----- */
+:root {
+  --content-padding: 1rem;
+}
+
+body {
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Navigation */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem var(--content-padding);
+}
+.navbar .brand {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+.navbar .nav-links {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: 0;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+}
+
+/* Hero / Header */
+.hero {
+  padding: 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.hero .hero-content { flex: 1; }
+.hero .hero-media { flex: 1; }
+
+/* Cards, forms, and common blocks */
+.card {
+  background: var(--card);
+  color: var(--card-foreground);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+.form-row .field { flex: 1; min-width: 0; }
+
+.table-responsive { width: 100%; overflow: auto; -webkit-overflow-scrolling: touch; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn.small { padding: 0.4rem 0.75rem; font-size: 0.9rem; }
+.btn.block { display: flex; width: 100%; }
+
+/* Minimum touch target sizes */
+button, .btn, input[type="button"], input[type="submit"], a[role="button"] {
+  min-height: 44px;
+}
+
+/* Small screens adjustments */
+@media (max-width: 768px) {
+  .nav-toggle { display: block; }
+  .navbar .nav-links { display: none; }
+  .hero { flex-direction: column; padding: 1.25rem 0; }
+  .hero .hero-media { order: -1; }
+  .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+@media (max-width: 600px) {
+  .form-row { flex-direction: column; }
+  .row { gap: 0.5rem; }
+  .card { padding: 0.75rem; }
+  html { font-size: 14px; }
+}
+
+/* ----- Element-level responsive defaults ----- */
+header, nav, main, footer, section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+nav ul {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0.5rem 0.6rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Forms: ensure controls stack and fill available width on mobile */
+form input, form textarea, form select, .input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--foreground);
+}
+
+/* Headings scale nicely on narrow screens */
+h1 { font-size: clamp(1.4rem, 3.5vw, 2.2rem); margin: 0.4rem 0; }
+h2 { font-size: clamp(1.2rem, 2.8vw, 1.6rem); margin: 0.35rem 0; }
+
+/* Footer layout */
+footer { padding: 1rem var(--content-padding); }
+footer .row { align-items: start; }
+
+/* Prevent horizontal page scrolling: prefer wrapping and vertical flow */
+html, body {
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+/* Ensure major layout containers never exceed the viewport width */
+.container, header, nav, main, footer, section, .row, .col {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Tables should adapt to narrow screens and allow cells to wrap */
+table {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 0.5rem;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Long words or unbroken strings should wrap instead of creating horizontal scroll */
+.no-overflow, .prevent-overflow {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+

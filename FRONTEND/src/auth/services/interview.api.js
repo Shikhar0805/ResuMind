@@ -44,3 +44,13 @@ export async function generateInterviewReport(resumeFile, selfDescription, jobDe
         throw err.response?.data || err;
     }
 }
+
+export async function deleteInterviewReport(reportId) {
+    if (!reportId) throw new Error('Report id is required');
+    try {
+        const response = await axios.delete(`/api/interview/${reportId}`, api);
+        return response.data;
+    } catch (err) {
+        throw err.response?.data || err;
+    }
+}

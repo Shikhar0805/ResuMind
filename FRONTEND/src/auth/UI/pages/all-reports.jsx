@@ -3,17 +3,26 @@ import Protected from '../components/protected';
 import HeaderControls from '../components/HeaderControls';
 import { useAuth } from '../../hooks/useAuth';
 import axios from 'axios';
-import {LayoutDashboard} from 'lucide-react';
+import {LayoutDashboard, Download, Trash2, CheckCircle} from 'lucide-react';
+import './interview-report.css';
 import { useNavigate } from 'react-router-dom';
 import{jsPDF} from 'jspdf';
-import{Download} from 'lucide-react';
+import { deleteInterviewReport } from '../../services/interview.api';
 
 export function AllReports() {
   const { user } = useAuth();
   const [reports, setReports] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [statusType, setStatusType] = useState('');
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
 
-  console.log(selected);
+  useEffect(() => {
+    if (!statusMessage) return;
+    const timer = setTimeout(() => setStatusMessage(''), 4000);
+    return () => clearTimeout(timer);
+  }, [statusMessage]);
+
 const downloadPDF = () => {
   if (!selected) return;
 
@@ -262,50 +271,126 @@ const downloadPDF = () => {
 
   const navigate = useNavigate();
 
+  const handleDeleteReport = async () => {
+    if (!selected) return;
+
+    try {
+      await deleteInterviewReport(selected._id || selected.id);
+      const updatedReports = reports.filter((r) => r._id !== selected._id && r.id !== selected.id);
+      setReports(updatedReports);
+      setSelected(updatedReports[0] || null);
+      setDeleteConfirmationVisible(false);
+      setStatusType('success');
+      setStatusMessage('Report deleted successfully.');
+      try {
+        const existing = JSON.parse(localStorage.getItem('allInterviewReports') || '[]');
+        const filtered = existing.filter((r) => r._id !== selected._id && r.id !== selected.id);
+        localStorage.setItem('allInterviewReports', JSON.stringify(filtered));
+        const latest = JSON.parse(localStorage.getItem('latestInterviewReport') || 'null');
+        if (latest && (latest._id === selected._id || latest.id === selected.id)) {
+          localStorage.setItem('latestInterviewReport', JSON.stringify(filtered[0] || {}));
+        }
+      } catch (error) {
+        // ignore localStorage cleanup errors
+      }
+    } catch (err) {
+      setStatusType('error');
+      setStatusMessage(err.message || err?.message || 'Failed to delete report');
+      setDeleteConfirmationVisible(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="flex items-center justify-between px-8 py-6">
-        <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 rounded-xl bg-foreground px-3 py-2 font-semibold text-background shadow-sm hover:scale-105 transition">
-            <LayoutDashboard size={16} />
-            <span className="hidden sm:inline">Dashboard</span>
-          </button>
-          <div className="text-2xl font-extrabold ml-140">Your Reports</div>
+      <header className="flex items-center justify-between px-4 py-6 sm:px-8">
+        <div
+          onClick={() => navigate('/dashboard')}
+          className="text-2xl font-extrabold text-foreground cursor-pointer select-none hover:text-foreground/80"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/dashboard'); }}
+        >
+          ResuMind AI
         </div>
         <div className="flex items-center gap-4"><HeaderControls /></div>
       </header>
 
-      <section className="px-8 py-6">
-        <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-1 bg-foreground/5 border rounded p-2 h-[70vh] overflow-auto">
+      <section className="px-4 py-6 sm:px-8">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-3xl font-extrabold text-foreground">Your Reports</h1>
+          {statusMessage && (
+            <div className={`inline-flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm shadow-sm ${statusType === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-red-50 border-red-200 text-red-900'}`}>
+              {statusType === 'success' && <CheckCircle size={18} className="text-emerald-600" />}
+              <span className="font-medium">{statusMessage}</span>
+            </div>
+          )}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ir-table-wrap">
+          <aside className="col-span-12 lg:col-span-3 bg-foreground/5 border rounded p-4 h-[70vh] overflow-auto ir-column ir-left">
             {reports.length === 0 ? (
               <div className="p-4 text-sm text-foreground/70">No reports found.</div>
             ) : (
               <ul>
                 {reports.map((r, idx) => (
-                  <li key={idx} className={`p-3 border-b cursor-pointer ${selected===r? 'bg-foreground/10' : ''}`} onClick={() => setSelected(r)}>
+                  <li
+                    key={idx}
+                    className={`p-3 border-b cursor-pointer ${selected===r? 'bg-foreground/10' : ''}`}
+                    onClick={() => {
+                      setSelected(r);
+                      setDeleteConfirmationVisible(false);
+                    }}
+                  >
                     <div className="font-semibold truncate">{r.title || `Report ${idx+1}`}</div>
                     <div className="text-xs text-foreground/60 truncate">{new Date(r.createdAt || Date.now()).toLocaleString()}</div>
                   </li>
                 ))}
               </ul>
             )}
-          </div>
+          </aside>
 
-          <div className="col-span-2 bg-foreground/5 border rounded p-4 h-[70vh] overflow-auto">
+          <main className="col-span-12 lg:col-span-6 bg-foreground/5 border rounded p-6 h-[70vh] overflow-auto ir-column ir-center">
             {selected ? (
               <div>
-  <div className="flex items-start justify-between mb-4">
+  <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
   <h2 className="text-xl font-bold">
     {selected.title || "Interview Report"}
   </h2>
 
-  <button
-    onClick={downloadPDF}
-    className="text-sm bg-foreground text-background px-2 py-1 rounded hover:bg-foreground/80">
-    <Download size={16} />
-  </button>
+  <div className="flex items-center gap-2">
+    <button
+      onClick={downloadPDF}
+      className="inline-flex items-center gap-2 text-sm bg-foreground text-background px-3 py-2 rounded hover:bg-foreground/80"
+    >
+      <Download size={16} />
+    </button>
+    <button
+      onClick={() => setDeleteConfirmationVisible(true)}
+      className="inline-flex items-center gap-2 text-sm bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700"
+    >
+      <Trash2 size={16} />
+    </button>
+  </div>
 </div>
+{deleteConfirmationVisible && (
+  <div className="mb-4 rounded-2xl border border-foreground/10 bg-foreground/5 p-4 text-sm text-foreground shadow-sm">
+    <div className="mb-3 font-semibold text-foreground">Delete report?</div>
+    <p className="mb-4 text-foreground/70">This action cannot be undone. Please confirm to remove the selected report.</p>
+    <div className="flex flex-wrap items-center gap-2">
+      <button
+        onClick={handleDeleteReport}
+        className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-background shadow-sm transition hover:bg-red-700 font-semibold"
+      >
+        Confirm Delete
+      </button>
+      <button
+        onClick={() => setDeleteConfirmationVisible(false)}
+        className="inline-flex items-center gap-2 rounded-xl border border-foreground/20 bg-background px-4 py-2 text-foreground shadow-sm transition hover:bg-foreground/5"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
                 <div className="text-sm text-foreground/70 mb-4">Generated: {new Date(selected.createdAt || Date.now()).toLocaleString()}</div>
 
                 {/* Summary */}
@@ -376,7 +461,36 @@ const downloadPDF = () => {
             ) : (
               <div className="text-sm text-foreground/70">Select a report from the list to view its content.</div>
             )}
-          </div>
+          </main>
+
+          <aside className="col-span-12 lg:col-span-3 border rounded p-6 h-[70vh] overflow-auto ir-column">
+            {selected ? (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="font-semibold">ATS Score</h3>
+                    <div className="text-2xl font-bold">{selected.atsScore ?? 'N/A'}</div>
+                  </div>
+                  <div>
+                    <LayoutDashboard size={40} />
+                  </div>
+                </div>
+                <h3 className="font-semibold mb-4">Skill Gaps</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selected.skillGapAnalysis?.length > 0 ? selected.skillGapAnalysis.map((s,i)=> (
+                    <span key={i} className={`skill-chip ${s.severity==='High' ? 'gap-high' : s.severity==='Medium' ? 'gap-medium' : 'gap-low'}`} title={s.severity}>
+                      <span className="skill-dot" aria-hidden />
+                      <span className="skill-name">{s.skills}</span>
+                    </span>
+                  )) : (
+                    <div className="text-foreground/60">No skill gap data available.</div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="text-sm text-foreground/70">When a report is selected, details appear here.</div>
+            )}
+          </aside>
         </div>
       </section>
     </main>

@@ -112,7 +112,15 @@ export function Dashboard() {
 
       {/* Header */}
       <header className="relative z-[9999] flex items-center justify-between px-8 py-6">
-        <div className="text-2xl font-extrabold text-foreground">ResuMind AI</div>
+        <div
+          onClick={() => navigate('/dashboard')}
+          className="text-2xl font-extrabold text-foreground cursor-pointer select-none hover:text-foreground/80"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/dashboard'); }}
+        >
+          ResuMind AI
+        </div>
         <div className="flex items-center gap-4">
           <HeaderControls />
         </div>

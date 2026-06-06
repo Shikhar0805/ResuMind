@@ -35,9 +35,7 @@ export function Index() {
         <div className="text-2xl font-extrabold text-foreground">ResuMind AI</div>
         <div className="flex items-center gap-4">
           <button onClick={() => navigate("/register")} className="rounded-xl bg-foreground px-6 py-2 text-sm font-semibold text-background hover:shadow-lg transition">Create Account</button>
-          <div className="hidden sm:block">
-            <HeaderControls />
-          </div>
+          <HeaderControls />
         </div>
       </header>
 

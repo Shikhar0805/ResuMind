@@ -124,7 +124,15 @@ export function InterviewReport() {
       </div>
       {/* Header */}
       <header className="relative z-10 flex items-center justify-between px-8 py-6">
-        <div className="text-2xl font-extrabold text-foreground">ResuMind AI</div>
+        <div
+          onClick={() => navigate('/dashboard')}
+          className="text-2xl font-extrabold text-foreground cursor-pointer select-none hover:text-foreground/80"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/dashboard'); }}
+        >
+          ResuMind AI
+        </div>
         <div className="flex items-center gap-4">
           <HeaderControls />
         </div>
@@ -133,8 +141,8 @@ export function InterviewReport() {
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold mb-6">Interview Report</h2>
 
-          <div className="grid grid-cols-12 gap-6 ir-table-wrap">
-            <aside className="col-span-3 border rounded p-4 ir-column ir-left">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ir-table-wrap">
+            <aside className="col-span-12 lg:col-span-3 border rounded p-4 ir-column ir-left">
               <nav className="space-y-3">
                 <button onClick={()=>setActiveSection('summary')} className={`menu-btn w-full text-left px-3 py-2 rounded ${activeSection==='summary' ? 'bg-foreground/10 font-semibold' : 'hover:bg-foreground/5'}`}>Summary</button>
                 <button onClick={()=>setActiveSection('technical')} className={`menu-btn w-full text-left px-3 py-2 rounded ${activeSection==='technical' ? 'bg-foreground/10 font-semibold' : 'hover:bg-foreground/5'}`}>Technical Questions</button>
@@ -145,7 +153,7 @@ export function InterviewReport() {
               </nav>
             </aside>
 
-            <main className="col-span-6 border rounded p-6 ir-column ir-center">
+            <main className="col-span-12 lg:col-span-6 border rounded p-6 ir-column ir-center">
               {activeSection === 'summary' && (
                 <div className="ir-animate section-card">
                   <h3 className="text-lg font-semibold mb-4">Summary</h3>
@@ -221,7 +229,7 @@ export function InterviewReport() {
               )}
             </main>
 
-            <aside className="col-span-3 border rounded p-6 ir-column">
+            <aside className="col-span-12 lg:col-span-3 border rounded p-6 ir-column">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h3 className="font-semibold">ATS Score</h3>

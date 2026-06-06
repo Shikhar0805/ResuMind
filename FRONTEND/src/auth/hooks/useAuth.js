@@ -56,9 +56,17 @@ const fetchProfile = async () => {
 
  useEffect(() => {
     const getandSetUser = async () => {
+        // Avoid calling profile endpoint if there's no stored token (prevents 401 on cold start)
+        const stored = localStorage.getItem('token');
+        if (!stored) {
+            setUser(null);
+            setLoading(false);
+            return;
+        }
+
         try {
             const data = await getProfile();
-            setUser(data.user);
+            setUser(data.user || null);
         } catch (err) {
             setUser(null);
         } finally {

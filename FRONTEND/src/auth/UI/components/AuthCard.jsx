@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, User } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
@@ -107,27 +107,30 @@ export function AuthCard({ initialMode }) {
 // Input field with animated floating label
 function FloatingField({ label, type, icon, value, onChange, required }) {
   const [isFilled, setIsFilled] = useState(Boolean(value && value.length));
+  const id = useId();
 
   return (
     <div className="relative">
-      {/* Input */}
+      {/* Input: use peer so label can react to focus/placeholder */}
       <input
+        id={id}
         type={type}
-        placeholder={label}
+        placeholder=" "
         value={value}
         required={required}
-        onFocus={(e) => setIsFilled(e.target.value.length > 0)}
+        onFocus={() => setIsFilled(true)}
         onBlur={(e) => setIsFilled(e.target.value.length > 0)}
         onChange={(e) => {
           setIsFilled(e.target.value.length > 0);
           onChange && onChange(e);
         }}
-        className="w-full border-0 border-b border-foreground/10 bg-transparent px-1 pb-2 pt-5 text-foreground outline-none focus:border-foreground transition-colors placeholder:text-foreground/60"
+        className="peer w-full border-0 border-b border-foreground/10 bg-transparent px-1 pb-2 pt-5 text-foreground outline-none focus:border-foreground transition-all placeholder:text-foreground/60"
       />
 
-      {/* Animated label */}
+      {/* Animated label: uses peer-* utilities and `isFilled` to ensure correct positioning */}
       <label
-        className={`absolute left-1 pointer-events-none text-foreground/70 transition-all ${
+        htmlFor={id}
+        className={`absolute left-1 pointer-events-none text-foreground/70 transition-all duration-150 ease-in-out ${
           isFilled ? "top-0 text-xs" : "top-5 text-base peer-focus:top-0 peer-focus:text-xs"
         }`}
       >

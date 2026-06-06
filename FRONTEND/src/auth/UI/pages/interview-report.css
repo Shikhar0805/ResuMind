@@ -1,6 +1,7 @@
 /* Interview report layout animations and fixed table scrolling */
-.ir-table-wrap{height:calc(100vh - 180px);overflow:hidden}
+.ir-table-wrap{max-height:calc(100vh - 180px);overflow:hidden}
 .ir-column{height:100%;overflow-y:auto;padding-right:0.5rem}
+@media (max-width: 1024px){.ir-table-wrap{max-height:none}.ir-column{height:auto}}
 .ir-animate{animation:fadeInUp .32s ease both}
 
 @keyframes fadeInUp{
@@ -13,9 +14,10 @@
 .gap-low{background:#10b981;color:#fff}
 
 /* compact skill chips */
-.skill-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:9999px;font-size:0.875rem;font-weight:600;min-width:0;max-width:none;white-space:normal;word-break:break-word}
+.skill-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:9999px;font-size:0.875rem;font-weight:600;min-width:0;max-width:100%;white-space:normal;word-break:break-word;flex:1 1 100%}
+@media (min-width: 640px){.skill-chip{flex:1 1 auto}}
 .skill-dot{width:8px;height:8px;border-radius:9999px;display:inline-block;flex:0 0 8px}
-.skill-name{line-height:1;display:inline-block;max-width:none}
+.skill-name{line-height:1;display:inline-block;max-width:100%}
 .gap-high .skill-dot{background:rgba(255,255,255,0.95)}
 .gap-medium .skill-dot{background:rgba(0,0,0,0.8)}
 .gap-low .skill-dot{background:rgba(255,255,255,0.95)}
