@@ -56,6 +56,34 @@
   --ring: oklch(0.704 0.04 256.788);
 }
 
+
+/* Firefox autofill */
+input:-moz-autofill, textarea:-moz-autofill, select:-moz-autofill {
+  box-shadow: 0 0 0px 1000px var(--card) inset !important;
+  -moz-text-fill-color: var(--foreground) !important;
+  background-color: transparent !important;
+}
+
+/* Fix dark mode autofill */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark textarea:-webkit-autofill,
+.dark textarea:-webkit-autofill:hover,
+.dark textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--foreground) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--background) inset !important;
+  box-shadow: 0 0 0px 1000px var(--background) inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--foreground) !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+}
+
 /* Dark mode colors */
 .dark {
   --background: oklch(0.11 0.01 255);
@@ -341,13 +369,17 @@ nav a {
 }
 
 /* Forms: ensure controls stack and fill available width on mobile */
-form input, form textarea, form select, .input {
+form input,
+form textarea,
+form select,
+.input {
   width: 100%;
-  padding: 0.6rem 0.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--border);
   background: transparent;
   color: var(--foreground);
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 /* Headings scale nicely on narrow screens */

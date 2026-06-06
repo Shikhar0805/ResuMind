@@ -2,7 +2,7 @@ import { useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-
+import React from "react";
 export function AuthCard({ initialMode }) {
   // Toggle between login and register mode (or use routing when embedded on dedicated pages)
   const [mode, setMode] = useState(initialMode || "login");
@@ -105,55 +105,50 @@ export function AuthCard({ initialMode }) {
 }
 
 // Input field with animated floating label
-function FloatingField({ label, type, icon, value, onChange, required }) {
-  const [isFilled, setIsFilled] = useState(Boolean(value && value.length));
+function FloatingField({
+  label,
+  type,
+  icon,
+  value,
+  onChange,
+  required,
+}) {
   const [showPassword, setShowPassword] = useState(false);
   const id = useId();
   const isPassword = type === "password";
 
   return (
-    <div className="flex items-center gap-3">
-      {/* Icon */}
-      <div className="flex-shrink-0 text-foreground/70">
-        {icon}
-      </div>
+    <div>
+      <div className="flex items-center gap-5 py-4">
+        {/* Icon */}
+        <div className="text-foreground/50 flex-shrink-0 scale-125">
+          {icon}
+        </div>
 
-      {/* Input wrapper */}
-      <div className="relative flex-1">
+        {/* Input */}
         <input
           id={id}
           type={isPassword && showPassword ? "text" : type}
-          placeholder=" "
           value={value}
           required={required}
-          onFocus={() => setIsFilled(true)}
-          onBlur={(e) => setIsFilled(e.target.value.length > 0)}
-          onChange={(e) => {
-            setIsFilled(e.target.value.length > 0);
-            onChange && onChange(e);
-          }}
-          className="peer w-full border-0 border-b border-foreground/20 bg-transparent px-0 py-2 text-sm sm:text-base text-foreground outline-none focus:border-foreground transition-all"
+          onChange={onChange}
+          placeholder={label}
+          className="flex-1 bg-transparent outline-none text-sm font-medium text-foreground placeholder:text-foreground/40"
         />
 
-        <label
-          htmlFor={id}
-          className={`absolute left-0 pointer-events-none text-foreground/70 transition-all duration-150 ease-in-out ${
-            isFilled
-              ? "-top-3 text-xs"
-              : "top-2 text-sm sm:text-base peer-focus:-top-3 peer-focus:text-xs"
-          }`}
-        >
-          {label}
-        </label>
-
+        {/* Password Toggle */}
         {isPassword && (
           <button
             type="button"
             aria-label={showPassword ? "Hide password" : "Show password"}
-            onClick={() => setShowPassword((s) => !s)}
-            className="absolute right-0 top-1/2 -translate-y-1/2 grid h-8 w-8 place-items-center text-foreground/70 hover:text-foreground transition"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="text-foreground/50 hover:text-foreground transition-colors"
           >
-            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            {showPassword ? (
+              <Eye size={22} />
+            ) : (
+              <EyeOff size={22} />
+            )}
           </button>
         )}
       </div>
