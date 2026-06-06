@@ -9,10 +9,13 @@ const authRoutes = require('../routes/auth.routes');
 const interviewRouter = require('../routes/interview.routes');
 
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://resumind-ai-frontend.onrender.com",
+    credentials: true,
+  })
+);
 
-app.use(cookieParser());
-app.use(express.json());
 app.use(cookieParser());
 app.use(express.json());
 
