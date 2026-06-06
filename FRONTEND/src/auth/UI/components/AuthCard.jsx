@@ -112,47 +112,50 @@ function FloatingField({ label, type, icon, value, onChange, required }) {
   const isPassword = type === "password";
 
   return (
-    <div className="relative">
-      {/* Input: use peer so label can react to focus/placeholder */}
-      <input
-        id={id}
-        type={isPassword && showPassword ? "text" : type}
-        placeholder=" "
-        value={value}
-        required={required}
-        onFocus={() => setIsFilled(true)}
-        onBlur={(e) => setIsFilled(e.target.value.length > 0)}
-        onChange={(e) => {
-          setIsFilled(e.target.value.length > 0);
-          onChange && onChange(e);
-        }}
-        className="peer w-full border-0 border-b border-foreground/10 bg-transparent px-0 pb-1.5 pt-3 text-sm sm:text-base text-foreground outline-none focus:border-foreground transition-all placeholder:text-foreground/60"
-      />
+    <div className="flex items-start gap-2 mb-1">
+      {/* Icon - outside input */}
+      <div className="flex-shrink-0 text-foreground/70 mt-2">{icon}</div>
 
-      {/* Animated label: uses peer-* utilities and `isFilled` to ensure correct positioning */}
-      <label
-        htmlFor={id}
-        className={`absolute left-0 pointer-events-none text-foreground/70 transition-all duration-150 ease-in-out ${
-          isFilled ? "top-0 text-xs" : "top-3 text-sm sm:text-base peer-focus:top-0 peer-focus:text-xs"
-        }`}
-      >
-        {label}
-      </label>
+      {/* Input wrapper */}
+      <div className="relative flex-1">
+        {/* Input: use peer so label can react to focus/placeholder */}
+        <input
+          id={id}
+          type={isPassword && showPassword ? "text" : type}
+          placeholder=" "
+          value={value}
+          required={required}
+          onFocus={() => setIsFilled(true)}
+          onBlur={(e) => setIsFilled(e.target.value.length > 0)}
+          onChange={(e) => {
+            setIsFilled(e.target.value.length > 0);
+            onChange && onChange(e);
+          }}
+          className="peer w-full border-0 border-b border-foreground/10 bg-transparent px-0 pb-1.5 pt-3 text-sm sm:text-base text-foreground outline-none focus:border-foreground transition-all placeholder:text-foreground/60"
+        />
 
-      {/* Left icon - positioned above input */}
-      <span className="absolute left-0 -top-6 text-foreground/70 pointer-events-none">{icon}</span>
-
-      {/* Password visibility toggle */}
-      {isPassword && (
-        <button
-          type="button"
-          aria-label={showPassword ? "Hide password" : "Show password"}
-          onClick={() => setShowPassword((s) => !s)}
-          className="absolute right-0 top-3 grid h-10 w-10 place-items-center text-foreground/70 hover:text-foreground transition"
+        {/* Animated label: uses peer-* utilities and `isFilled` to ensure correct positioning */}
+        <label
+          htmlFor={id}
+          className={`absolute left-0 pointer-events-none text-foreground/70 transition-all duration-150 ease-in-out ${
+            isFilled ? "top-0 text-xs" : "top-3 text-sm sm:text-base peer-focus:top-0 peer-focus:text-xs"
+          }`}
         >
-          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-        </button>
-      )}
+          {label}
+        </label>
+
+        {/* Password visibility toggle */}
+        {isPassword && (
+          <button
+            type="button"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            onClick={() => setShowPassword((s) => !s)}
+            className="absolute right-0 top-2 grid h-8 w-8 place-items-center text-foreground/70 hover:text-foreground transition"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
