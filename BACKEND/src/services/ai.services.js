@@ -1,68 +1,135 @@
-const { GoogleGenAI } =require("@google/genai");
-const {z}=require('zod');
-const {zodToJsonSchema}=require('zod-to-json-schema');
+const { GoogleGenAI } = require("@google/genai");
+const { z } = require('zod');
+const { zodToJsonSchema } = require('zod-to-json-schema');
+
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+
+// Match GenAI's actual output format (flat arrays with string values)
 const interviewReportSchema = z.object({
-      ATSScore: z.number().describe("The ATS score of the resume based on the how well it matches the job description."),
+  atsScore: z.number(),
 
-      skillGapAnalysis: z.object({
-        skills: z.string().describe("Identify the skill gaps based on the job description and the candidate's resume."),
-        severity: z.enum(['Low', 'Medium', 'High']).describe("The severity of the skill gap.")
-      }).describe("An analysis of the skill gaps for the candidate based on the job description and resume. Keep it concise and clean."),
+  technicalInterviews: z.array(
+    z.object({
+      questions: z.string(),
+      intention: z.string(),
+      answers: z.string()
+    })
+  ),
 
-      technicalInterview: z.object({
-        questions: z.string().describe("Mention the most probable technical questions that the candidate might face in the interview based on the job description."),
-        intention: z.string().describe("The intention of the interviewer behind asking those questions."),
-        answers: z.string().describe("Provide detailed answers about how and what the candidate should answer for each question.")
-      }).describe("A technical interview analysis for the candidate based on the job description and resume. Keep it concise and clean."),
+  behavioralInterviews: z.array(
+    z.object({
+      questions: z.string(),
+      intention: z.string(),
+      answers: z.string()
+    })
+  ),
 
-      behavioralInterview: z.object({
-        questions: z.string().describe("Mention the most probable behavioral questions that the candidate might face in the interview based on the job description."),
-        intention: z.string().describe("The intention of the interviewer behind asking those questions."),
-        answers: z.string().describe("Provide detailed answers about how and what the candidate should answer for each question.")
-      }).describe("A behavioral interview analysis for the candidate based on the job description and resume. Keep it concise and clean."),
+  skillGapAnalysis: z.array(
+    z.object({
+      skills: z.string(),
+      severity: z.enum(["Low", "Medium", "High"])
+    })
+  ),
 
-      preparationPlan: z.array(z.object({
-        day: z.number().describe("The day number for the preparation plan."),
-        focusAreas: z.string().describe("The focus areas for that day based on the skill gap analysis and interview questions."),
-        tasks: z.string().describe("The specific tasks that the candidate should do on that day to prepare for the interview.")
-      })).describe("A day-wise preparation plan for the candidate to prepare for the interview based on the skill gap analysis and interview questions. Keep it concise and clean.")
-
+  preparationPlan: z.array(
+    z.object({
+      day: z.number(),
+      focusAreas: z.string(),
+      tasks: z.string()
+    })
+    
+  ),
+  improvements: z.array(
+    z.object({
+      title: z.string(),
+      description: z.string()
+    })
+  ),
+  title: z.string()
 });
 
+async function generateInterviewReport({resumeText, selfDescription, jobDescription}) {
 
+const prompt = `
+Analyze the candidate's resume and job description.
 
-async function generateInterviewReport({jobDescription,resumeText,selfDescription}) {
+Return ONLY valid JSON.
 
-const prompt = `Based on the following job description and candidate's resume, generate a comprehensive interview report that includes the following sections:
+Example format:
 
-1. ATS Score: Provide an ATS score for the candidate's resume based on how well it matches the job description.
-
-2. Skill Gap Analysis: Identify the skill gaps for the candidate based on the job description and the candidate's resume. For each skill gap, provide a severity level (Low, Medium, High).
-
-3. Technical Interview: Mention the most probable technical questions that the candidate might face in the interview based on the job description. For each question, explain the intention of the interviewer behind asking it and provide detailed answers about how and what the candidate should answer.
-
-4. Behavioral Interview: Mention the most probable behavioral questions that the candidate might face in the interview based on the job description. For each question, explain the intention of the interviewer behind asking it and provide detailed answers about how and what the candidate should answer.
-
-5. Preparation Plan: Create a day-wise preparation plan for the candidate to prepare for the interview based on the skill gap analysis and interview questions. For each day, specify the focus areas and the specific tasks that the candidate should do to prepare for the interview.
-
-Job Description:${jobDescription},
-
-Candidate's Resume:${resumeText},
-
-Self Description:${selfDescription},`;
-
-
-const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: zodToJsonSchema(interviewReportSchema),
-    },
-  });
-
-  console.log(JSON.parse(response.text));
+{
+  "atsScore": 80,
+  "technicalInterviews": [
+    {
+      "questions": "What is React?",
+      "intention": "Check React fundamentals",
+      "answers": "React is a JavaScript library..."
+    }
+  ],
+  "behavioralInterviews": [
+    {
+      "questions": "Tell me about yourself",
+      "intention": "Evaluate communication skills",
+      "answers": "Use STAR method..."
+    }
+  ],
+  "skillGapAnalysis": [
+    {
+      "skills": "Node.js",
+      "severity": "High"
+    }
+  ],
+  "preparationPlan": [
+    {
+      "day": 1,
+      "focusAreas": "React",
+      "tasks": "Study React hooks and state management"
+    }
+  ],
+  "improvements": [
+    {
+      "title": "Improve Communication Skills",
+      "description": "Work on articulating ideas more clearly."
+    }
+  ],
+  "title": "Software Engineer Interview Report,Use different titles each time"
 }
 
-module.exports= generateInterviewReport;
+Requirements:
+- ATS score between 0 and 100
+- 5 technical interview questions
+- 5 behavioral interview questions
+- 5 skill gaps
+- 7 preparation days
+- Every array item MUST be an object
+- Do NOT return strings
+- Do NOT return markdown
+- Return JSON only
+
+Job Description:
+${jobDescription}
+
+Resume:
+${resumeText}
+
+Self Description:
+${selfDescription}
+`;
+
+const response = await ai.models.generateContent({
+  model: "gemini-3.5-flash",
+  contents: prompt,
+  config: {
+    responseMimeType: "application/json"
+  }
+});
+const parsed = JSON.parse(response.text);
+
+console.dir(parsed, { depth: null });
+
+const validated = interviewReportSchema.parse(parsed);
+
+return validated;
+}
+
+module.exports = generateInterviewReport;

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
-import { Moon, Sun, FileText, BarChart3, Zap } from "lucide-react";
+import { FileText, BarChart3, Zap } from "lucide-react";
+import HeaderControls from "../components/HeaderControls";
 import { ScrollAnimate } from "../components/ScrollAnimate";
 
 const features = [
@@ -33,11 +34,10 @@ export function Index() {
       <header className="relative z-10 flex items-center justify-between px-8 py-6">
         <div className="text-2xl font-extrabold text-foreground">ResuMind AI</div>
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate("/login")} className="text-sm font-semibold text-foreground hover:opacity-70">Sign In</button>
           <button onClick={() => navigate("/register")} className="rounded-xl bg-foreground px-6 py-2 text-sm font-semibold text-background hover:shadow-lg transition">Create Account</button>
-          <button onClick={toggleTheme} className="p-2 bg-foreground text-background rounded-xl hover:shadow-lg transition">
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          <div className="hidden sm:block">
+            <HeaderControls />
+          </div>
         </div>
       </header>
 

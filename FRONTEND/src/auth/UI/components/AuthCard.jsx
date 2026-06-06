@@ -122,7 +122,7 @@ function FloatingField({ label, type, icon, value, onChange, required }) {
           setIsFilled(e.target.value.length > 0);
           onChange && onChange(e);
         }}
-        className="w-full border-0 border-b border-foreground/40 bg-transparent px-1 pb-2 pt-5 text-foreground outline-none focus:border-foreground transition-colors"
+        className="w-full border-0 border-b border-foreground/10 bg-transparent px-1 pb-2 pt-5 text-foreground outline-none focus:border-foreground transition-colors placeholder:text-foreground/60"
       />
 
       {/* Animated label */}

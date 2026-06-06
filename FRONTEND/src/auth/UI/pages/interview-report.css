@@ -1,0 +1,42 @@
+/* Interview report layout animations and fixed table scrolling */
+.ir-table-wrap{height:calc(100vh - 180px);overflow:hidden}
+.ir-column{height:100%;overflow-y:auto;padding-right:0.5rem}
+.ir-animate{animation:fadeInUp .32s ease both}
+
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.gap-high{background:#ef4444;color:#fff}
+.gap-medium{background:#facc15;color:#000}
+.gap-low{background:#10b981;color:#fff}
+
+/* compact skill chips */
+.skill-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:9999px;font-size:0.875rem;font-weight:600;min-width:0;max-width:none;white-space:normal;word-break:break-word}
+.skill-dot{width:8px;height:8px;border-radius:9999px;display:inline-block;flex:0 0 8px}
+.skill-name{line-height:1;display:inline-block;max-width:none}
+.gap-high .skill-dot{background:rgba(255,255,255,0.95)}
+.gap-medium .skill-dot{background:rgba(0,0,0,0.8)}
+.gap-low .skill-dot{background:rgba(255,255,255,0.95)}
+
+.ir-left .menu-btn{transition:all .18s ease}
+.ir-left .menu-btn:hover{transform:translateX(4px);opacity:0.95}
+
+.ir-center .section-card{transition:all .2s ease}
+.ir-center .section-card.enter{opacity:1;transform:none}
+.ir-center .section-card.leave{opacity:0;transform:translateY(8px)}
+
+/* Themed scrollbar for the report columns */
+.ir-column::-webkit-scrollbar{width:10px;height:10px}
+.ir-column::-webkit-scrollbar-track{background:transparent}
+.ir-column::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9999px;border:2px solid transparent;background-clip:padding-box}
+.ir-column::-webkit-scrollbar-thumb:hover{background:#94a3b8}
+
+/* Dark theme overrides (when .dark class is present) */
+.dark .ir-column::-webkit-scrollbar-thumb{background:#374151}
+.dark .ir-column::-webkit-scrollbar-thumb:hover{background:#4b5563}
+
+/* Firefox support */
+.ir-column{scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent}
+.dark .ir-column{scrollbar-color:#374151 transparent}

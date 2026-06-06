@@ -119,3 +119,33 @@ html {
 body {
   @apply bg-background text-foreground;
 }
+
+/* Ensure form inputs blend with themed card and don't turn white on focus or autofill */
+input, textarea, select {
+  background: transparent;
+  color: var(--foreground);
+}
+
+input:focus, textarea:focus, select:focus {
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Fix Chrome autofill background */
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill,
+input:-webkit-autofill:hover, textarea:-webkit-autofill:hover, select:-webkit-autofill:hover,
+input:-webkit-autofill:focus, textarea:-webkit-autofill:focus, select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px var(--card) inset !important;
+  box-shadow: 0 0 0px 1000px var(--card) inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  background-color: transparent !important;
+  background-clip: padding-box !important;
+}
+
+/* Firefox autofill */
+input:-moz-autofill, textarea:-moz-autofill, select:-moz-autofill {
+  box-shadow: 0 0 0px 1000px var(--card) inset !important;
+  -moz-text-fill-color: var(--foreground) !important;
+  background-color: transparent !important;
+}

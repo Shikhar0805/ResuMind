@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
-import { Moon, Sun, Home } from "lucide-react";
+import { Home } from "lucide-react";
 import { AuthCard } from "../components/AuthCard";
+import HeaderControls from "../components/HeaderControls";
 
 export function Login() {
   const { theme, toggleTheme } = useTheme();
@@ -24,13 +25,9 @@ export function Login() {
           <Home size={18} />
           <span className="hidden sm:inline">Home</span>
         </button>
-        <button
-          onClick={toggleTheme}
-          aria-label="Toggle theme"
-          className="grid h-10 w-10 place-items-center rounded-xl bg-foreground text-background shadow-lg transition-transform hover:scale-105"
-        >
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
+        <div className="flex items-center gap-4">
+          <HeaderControls />
+        </div>
       </header>
 
       <section className="relative z-10 flex items-center justify-center min-h-[calc(100vh-100px)]">
