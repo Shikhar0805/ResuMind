@@ -40,7 +40,7 @@ export function InterviewReport() {
         // ignore parse errors and continue to network fetch
       }
       try {
-        const resp = await axios.get('/api/interview/latest', { baseURL: 'http://localhost:3000', withCredentials: true });
+        const resp = await axios.get('/api/interview/latest', { baseURL:import.meta.env.VITE_API_URL, withCredentials: true });
         if (!mounted) return;
         // Prefer server response, fall back to persisted report if available
         if (resp.data && resp.data.interviewReport) {

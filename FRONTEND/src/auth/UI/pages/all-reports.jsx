@@ -240,7 +240,10 @@ const downloadPDF = () => {
     async function load() {
       // Prefer server-side listing for user's reports
       try {
-        const resp = await axios.get('/api/interview/reports', { baseURL: 'http://localhost:3000', withCredentials: true });
+        const resp = await axios.get('/api/interview/reports', {
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true
+});
         if (!mounted) return;
         const serverReports = resp.data?.reports || [];
         setReports(serverReports);
