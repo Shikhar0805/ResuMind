@@ -126,21 +126,21 @@ function FloatingField({ label, type, icon, value, onChange, required }) {
           setIsFilled(e.target.value.length > 0);
           onChange && onChange(e);
         }}
-        className="peer w-full border-0 border-b border-foreground/10 bg-transparent pl-8 pr-10 pb-2 pt-5 text-foreground outline-none focus:border-foreground transition-all placeholder:text-foreground/60"
+        className="peer w-full border-0 border-b border-foreground/10 bg-transparent pl-8 pr-12 pb-2 pt-5 text-sm sm:text-base text-foreground outline-none focus:border-foreground transition-all placeholder:text-foreground/60"
       />
 
       {/* Animated label: uses peer-* utilities and `isFilled` to ensure correct positioning */}
       <label
         htmlFor={id}
-        className={`absolute left-1 pointer-events-none text-foreground/70 transition-all duration-150 ease-in-out ${
-          isFilled ? "top-0 text-xs" : "top-5 text-base peer-focus:top-0 peer-focus:text-xs"
+        className={`absolute left-8 pointer-events-none text-foreground/70 transition-all duration-150 ease-in-out ${
+          isFilled ? "top-0 text-xs" : "top-5 text-sm sm:text-base peer-focus:top-0 peer-focus:text-xs"
         }`}
       >
         {label}
       </label>
 
       {/* Left icon */}
-      <span className="absolute left-1 top-4 text-foreground/70">{icon}</span>
+      <span className="absolute left-1 top-5 text-foreground/70 pointer-events-none">{icon}</span>
 
       {/* Password visibility toggle */}
       {isPassword && (
@@ -148,7 +148,7 @@ function FloatingField({ label, type, icon, value, onChange, required }) {
           type="button"
           aria-label={showPassword ? "Hide password" : "Show password"}
           onClick={() => setShowPassword((s) => !s)}
-          className="absolute right-1 top-2 grid h-10 w-10 place-items-center rounded-md text-foreground/70 hover:bg-foreground/5 transition"
+          className="absolute right-0 top-3 grid h-10 w-10 place-items-center text-foreground/70 hover:text-foreground transition"
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>

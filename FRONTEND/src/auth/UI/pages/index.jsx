@@ -34,10 +34,7 @@ export function Index() {
       <header className="relative z-10 flex items-center justify-between px-8 py-6">
         <div className="text-2xl font-extrabold text-foreground">ResuMind AI</div>
         <div className="flex items-center gap-2 sm:gap-4">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <button onClick={() => navigate("/login")} className="rounded-xl border border-foreground/10 px-4 py-2 sm:px-6 sm:py-2 text-sm font-semibold text-foreground hover:bg-foreground/5 transition">Sign In</button>
-            <button onClick={() => navigate("/register")} className="rounded-xl bg-foreground px-4 py-2 sm:px-6 sm:py-2 text-sm font-semibold text-background hover:shadow-lg transition">Create Account</button>
-          </div>
+          <button onClick={() => navigate("/login")} className="rounded-xl bg-white px-3 py-2 sm:px-6 sm:py-2 text-xs sm:text-sm font-semibold text-black hover:shadow-lg transition whitespace-nowrap">Sign In</button>
           <HeaderControls />
         </div>
       </header>
@@ -46,12 +43,9 @@ export function Index() {
       <section className="relative z-10 flex flex-col items-center justify-center px-8 py-24">
         <div className="text-center">
           <div className="mb-6 inline-block rounded-full bg-foreground px-4 py-1.5 text-sm font-semibold text-background">AI-Powered Career Tools</div>
-          <h1 className="mb-6 text-5xl font-bold text-foreground md:text-6xl">Ace Your Career Journey</h1>
-          <p className="mb-12 max-w-2xl text-lg text-foreground/80">Upload your resume, analyze job descriptions, detect skill gaps, and generate AI-powered interview questions and ATS-optimized resumes instantly.</p>
-          <div className="mb-24 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <button onClick={() => navigate("/register")} className="rounded-xl bg-foreground px-8 py-4 font-semibold text-background hover:shadow-lg transition">Get Started →</button>
-            <button onClick={() => navigate("/login")} className="rounded-xl border border-foreground/10 px-6 py-3 font-semibold text-foreground hover:bg-foreground/5 transition">Sign In</button>
-          </div>
+          <h1 className="mb-6 text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">Ace Your Career Journey</h1>
+          <p className="mb-12 max-w-2xl text-base sm:text-lg text-foreground/80">Upload your resume, analyze job descriptions, detect skill gaps, and generate AI-powered interview questions and ATS-optimized resumes instantly.</p>
+          <button onClick={() => navigate("/register")} className="mb-24 rounded-xl bg-foreground px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-background hover:shadow-lg transition">Get Started →</button>
         </div>
       </section>
 
