@@ -59,7 +59,7 @@ src/
 │   └── register.jsx         # Auth page
 ├── App.jsx                  # Router setup
 ├── main.jsx                 # Entry point
-└── styles.css               # Global styles
+└── styles/styles.css               # Global styles
 ```
 
 ## Routes

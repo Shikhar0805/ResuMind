@@ -1,5 +1,5 @@
 @import "tailwindcss" source(none);
-@source "../src";
+@source "..";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -149,3 +149,71 @@ input:-moz-autofill, textarea:-moz-autofill, select:-moz-autofill {
   -moz-text-fill-color: var(--foreground) !important;
   background-color: transparent !important;
 }
+
+/* ----- Responsive helpers & global layout ----- */
+/* Box sizing and sensible defaults */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Fluid typography (scales between small and large screens) */
+html {
+  font-size: clamp(14px, 1.2vw + 12px, 18px);
+}
+
+/* Central content container used across pages */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Make media scale down instead of breaking layout */
+img, picture, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Simple responsive row/column helpers */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.col {
+  flex: 1 1 240px; /* grow, shrink, base */
+  min-width: 0;
+}
+
+/* Stack layout for small screens */
+.stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Utility: horizontal scroll safe wrappers */
+.no-overflow {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Common breakpoint tweaks */
+@media (max-width: 768px) {
+  .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  html { font-size: 14px; }
+  .row { gap: 0.5rem; }
+}
+
+/* Ensure interactive controls scale on small devices */
+button, a[role="button"], input[type="button"], input[type="submit"] {
+  touch-action: manipulation;
+}
+

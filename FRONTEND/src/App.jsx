@@ -2,7 +2,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import AppRoutes from "./app.routes";
 
 import { ThemeProvider } from "./auth/UI/theme/ThemeContext";
-import { AuthProvider } from "./auth/auth.context";
+import { AuthProvider } from "./auth/UI/theme/auth.context";
 
 export function App() {
   return (
