@@ -1,6 +1,6 @@
 import { useState, useId } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 export function AuthCard({ initialMode }) {
@@ -107,14 +107,16 @@ export function AuthCard({ initialMode }) {
 // Input field with animated floating label
 function FloatingField({ label, type, icon, value, onChange, required }) {
   const [isFilled, setIsFilled] = useState(Boolean(value && value.length));
+  const [showPassword, setShowPassword] = useState(false);
   const id = useId();
+  const isPassword = type === "password";
 
   return (
     <div className="relative">
       {/* Input: use peer so label can react to focus/placeholder */}
       <input
         id={id}
-        type={type}
+        type={isPassword && showPassword ? "text" : type}
         placeholder=" "
         value={value}
         required={required}
@@ -124,7 +126,7 @@ function FloatingField({ label, type, icon, value, onChange, required }) {
           setIsFilled(e.target.value.length > 0);
           onChange && onChange(e);
         }}
-        className="peer w-full border-0 border-b border-foreground/10 bg-transparent px-1 pb-2 pt-5 text-foreground outline-none focus:border-foreground transition-all placeholder:text-foreground/60"
+        className="peer w-full border-0 border-b border-foreground/10 bg-transparent pl-8 pr-10 pb-2 pt-5 text-foreground outline-none focus:border-foreground transition-all placeholder:text-foreground/60"
       />
 
       {/* Animated label: uses peer-* utilities and `isFilled` to ensure correct positioning */}
@@ -137,8 +139,20 @@ function FloatingField({ label, type, icon, value, onChange, required }) {
         {label}
       </label>
 
-      {/* Icon */}
-      <span className="absolute right-1 top-4 text-foreground/70">{icon}</span>
+      {/* Left icon */}
+      <span className="absolute left-1 top-4 text-foreground/70">{icon}</span>
+
+      {/* Password visibility toggle */}
+      {isPassword && (
+        <button
+          type="button"
+          aria-label={showPassword ? "Hide password" : "Show password"}
+          onClick={() => setShowPassword((s) => !s)}
+          className="absolute right-1 top-2 grid h-10 w-10 place-items-center rounded-md text-foreground/70 hover:bg-foreground/5 transition"
+        >
+          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      )}
     </div>
   );
 }
